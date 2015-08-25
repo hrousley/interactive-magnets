@@ -4,20 +4,20 @@ var _offsetX = 0;           // current element offset
 var _offsetY = 0;
 var _dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
 var _oldZIndex = 0;         // we temporarily increase the z-index during drag
-var _debug = $('debug');    // makes life easier
 
 
+//when load mousedown
+//when click mouseMOVE
+//when unclick mouseUP
 
 function InitDragDrop()
 {
-    document.onmousedown = OnMouseDown;
-    document.onmouseup = OnMouseUp;
+    document.addEventListener('mousedown', OnMouseDown);
 }
 
 InitDragDrop();
 
-function OnMouseDown(e)
-{
+function OnMouseDown(e) {
     // IE doesn't pass the event object
     if (e == null) 
         e = window.event; 
@@ -25,16 +25,9 @@ function OnMouseDown(e)
     // IE uses srcElement, others use target
     var target = e.target != null ? e.target : e.srcElement;
     
-    _debug.innerHTML = target.className == 'drag' 
-        ? 'draggable element clicked' 
-        : 'NON-draggable element clicked';
-
     // for IE, left click == 1
     // for Firefox, left click == 0
-    if ((e.button == 1 && window.event != null || 
-        e.button == 0) && 
-        target.className == 'drag')
-    {
+    if ((e.button == 1 && window.event != null || e.button == 0) && target.className.indexOf('drag') > -1) {
         // grab the mouse position
         _startX = e.clientX;
         _startY = e.clientY;
@@ -51,8 +44,8 @@ function OnMouseDown(e)
         _dragElement = target;
 
         // tell our code to start moving the element with the mouse
-        document.onmousemove = OnMouseMove;
-        
+        document.addEventListener('mousemove', OnMouseMove);
+
         // cancel out any text selections
         document.body.focus();
 
@@ -63,37 +56,33 @@ function OnMouseDown(e)
         
         // prevent text selection (except IE)
         return false;
-    }
+     }
 }
 
-function OnMouseMove(e)
-{
+var OnMouseMove = function(e) {
     if (e == null) 
         var e = window.event; 
 
     // this is the actual "drag code"
     _dragElement.style.left = (_offsetX + e.clientX - _startX) + 'px';
     _dragElement.style.top = (_offsetY + e.clientY - _startY) + 'px';
-    
-    _debug.innerHTML = '(' + _dragElement.style.left + ', ' + 
-        _dragElement.style.top + ')';   
+     
 }
 
-function OnMouseUp(e)
-{
+function OnMouseUp(e) {
+
     if (_dragElement != null)
     {
         _dragElement.style.zIndex = _oldZIndex;
 
         // we're done with these events until the next OnMouseDown
-        document.onmousemove = null;
+        document.removeEventListener('mousemove', OnMouseMove);
+        document.removeEventListener('mousedown', OnMouseDown);
         document.onselectstart = null;
         _dragElement.ondragstart = null;
 
         // this is how we know we're not dragging      
         _dragElement = null;
-        
-        _debug.innerHTML = 'mouse up';
     }
 }
 
