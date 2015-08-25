@@ -10,14 +10,14 @@ var _oldZIndex = 0;         // we temporarily increase the z-index during drag
 //when click mouseMOVE
 //when unclick mouseUP
 
-function InitDragDrop()
+function initDragDrop()
 {
-    document.addEventListener('mousedown', OnMouseDown);
+    document.addEventListener('mousedown', onMouseDown);
 }
 
-InitDragDrop();
+initDragDrop();
 
-function OnMouseDown(e) {
+function onMouseDown(e) {
     // IE doesn't pass the event object
     if (e == null) 
         e = window.event; 
@@ -33,8 +33,8 @@ function OnMouseDown(e) {
         _startY = e.clientY;
         
         // grab the clicked element's position
-        _offsetX = ExtractNumber(target.style.left);
-        _offsetY = ExtractNumber(target.style.top);
+        _offsetX = extractNumber(target.style.left);
+        _offsetY = extractNumber(target.style.top);
         
         // bring the clicked element to the front while it is being dragged
         _oldZIndex = target.style.zIndex;
@@ -44,7 +44,7 @@ function OnMouseDown(e) {
         _dragElement = target;
 
         // tell our code to start moving the element with the mouse
-        document.addEventListener('mousemove', OnMouseMove);
+        document.addEventListener('mousemove', onMouseMove);
 
         // cancel out any text selections
         document.body.focus();
@@ -53,13 +53,16 @@ function OnMouseDown(e) {
         document.onselectstart = function () { return false; };
         // prevent IE from trying to drag an image
         target.ondragstart = function() { return false; };
+
+        document.addEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousedown', onMouseDown);
         
         // prevent text selection (except IE)
         return false;
      }
 }
 
-var OnMouseMove = function(e) {
+var onMouseMove = function(e) {
     if (e == null) 
         var e = window.event; 
 
@@ -69,15 +72,17 @@ var OnMouseMove = function(e) {
      
 }
 
-function OnMouseUp(e) {
+function onMouseUp(e) {
 
     if (_dragElement != null)
     {
         _dragElement.style.zIndex = _oldZIndex;
 
         // we're done with these events until the next OnMouseDown
-        document.removeEventListener('mousemove', OnMouseMove);
-        document.removeEventListener('mousedown', OnMouseDown);
+        document.removeEventListener('mousemove', onMouseMove);
+        document.addEventListener('mousedown', onMouseDown);
+        document.removeEventListener('mouseup', onMouseUp);
+
         document.onselectstart = null;
         _dragElement.ondragstart = null;
 
@@ -86,7 +91,7 @@ function OnMouseUp(e) {
     }
 }
 
-function ExtractNumber(value)
+function extractNumber(value)
 {
     var n = parseInt(value);
 	
