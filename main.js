@@ -5,13 +5,13 @@ var _offsetY = 0;
 var _dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
 var _oldZIndex = 0;         // we temporarily increase the z-index during drag
 
+var textarea = "the,quick,brown,fox,jumps,over,the,lazy,dog";
 
 //when load mousedown
 //when click mouseMOVE
 //when unclick mouseUP
 
-function initDragDrop()
-{
+function initDragDrop() {
     document.addEventListener('mousedown', onMouseDown);
 }
 
@@ -91,15 +91,27 @@ function onMouseUp(e) {
     }
 }
 
-function extractNumber(value)
-{
+function extractNumber(value) {
     var n = parseInt(value);
 	
     return n == null || isNaN(n) ? 0 : n;
 }
 
 // this is simply a shortcut for the eyes and fingers
-function $(id)
-{
+function $(id) {
     return document.getElementById(id);
 }
+
+function convertInput(textarea) {
+    var splitInput = textarea.split(",");
+    var holdMe = document.getElementsByClassName("main-container")[0];
+
+    console.log(splitInput);
+
+    for (i = 0; i < splitInput.length; i++) {
+        var word = splitInput[i];
+        holdMe.innerHTML += '<div class="magnet drag">'+word+'</div>';
+    }
+}
+
+convertInput(textarea);
