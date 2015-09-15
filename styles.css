@@ -2,22 +2,53 @@
 	margin: 0;
 	padding: 0;
 }
+.options {
+  position: fixed;
+  left: 15px;
+  top: 15px;
+  width: 330px;
+  z-index: 1;
+}
 .main-container {
-	background: url("http://bigchill.com/wp-content/uploads/2014/07/retropolitan_blue.jpg") no-repeat center center;
-	height: 1920px;
-
-	width: 1200px;
+	background: url("refrigerator.png") no-repeat center center;
+	height: 1545px;
+	width: 700px;
 	margin: 0 auto;
+  position: relative;
+  z-index: 0;
+}
+.magnet {
+  margin: 5px;
+  width: auto;
+  max-width: 90%;
+  text-align: center;
+  background: #fff;
+  text-transform: uppercase;
+  font-family: "Impact", sans-serif;
+  height: 20px;
+  padding-top: 2px;
+  padding-bottom: 1px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border: 1px solid #AAAAAA;
+  border-bottom: 2px solid #222222;
+  border-right: 2px solid #222222;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  overflow: hidden;
 }
 
-.magnet {
-  border: 2px solid black;
-  padding: 10px;
-  width: 200px;
-  text-align: center;
-  margin: 5px 0;
-  background: gray;
-}
 .drag { 
-  position: relative; 
+  position: absolute; 
+  top: 0;
+  left: 0;
+}
+input, select, textarea {
+  display: block;
+  margin: 10px 0;
+}
+textarea {
+  width: 320px;
+  height: 60px;
 }

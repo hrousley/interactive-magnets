@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Fridge Magnets</title>
+		<title>Interactive Magnets</title>
+
+		<script src="jquery-2.1.4.min.js"></script>
 
 		<link href="styles.css" rel="stylesheet" type="text/css">
 
@@ -9,22 +11,33 @@
 
 	<body>
 
-		<h1>Drag and Drop</h1>
+		<div class="options">
+			Type in your own (seperated by commas) or select an existing magnet set.
+
+			<textarea id="inputTextArea"></textarea>
+
+			<input type="button" value="Clear" onclick="clearInput()"></input>
+
+			<select id="selectExisting">
+				<option value="selectone">Select One</option>
+				<option value="sample">Sample</option>
+				<option value="lolcat">LOLCAT</option>
+				<option value="geek">Geek</option>
+				<option value="bacon">Bacon</option>
+				<option value="explicit">Explicit</option>
+			</select>
+		
+			<input type="submit" value="Submit" onclick="convertInput()"></input>
+			<input type="button" value="Clear All Magnets" onclick="clearMagnets()"></input>
+		</div>
 
 		<div class="main-container">
-
-				<div class="magnet mg-one drag">
-					word one
-				</div>
-
-				<div class="magnet mg-two drag">
-					word two
-				</div>
 			
 		</div>
 
 
 	</body>
+
 
 	<script src="main.js" type="text/javascript"></script>
 
