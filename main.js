@@ -5,11 +5,16 @@ var _offsetY = 0;
 var _dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
 var _oldZIndex = 0;         // we temporarily increase the z-index during drag
 
-var textarea = "the,quick,brown,fox,jumps,over,the,lazy,dog";
 
-//when load mousedown
-//when click mouseMOVE
-//when unclick mouseUP
+var premadePhrases = {
+    sample:"the,quick,brown,fox,jumps,over,the,lazy,dog",
+    lolcat:"lol,cat,lolcat,iz,r,ur,good,?,i,want,cheezburger,nao",
+    geek:"battle,awesome,are,an,action,could,complete,cheat,bit,force,information,is",
+    bacon:"the,day,begin,s,with,this,morning,marvel,bring,ing,the,aroma,of,satisfaction,bacon",
+    beard:"my,beard,is,a,lifestyle,facial,hair,touch,it,thanks",
+    explicit:"fuck,fuck,fuck"
+};
+
 
 function initDragDrop() {
     document.addEventListener('mousedown', onMouseDown);
@@ -97,21 +102,57 @@ function extractNumber(value) {
     return n == null || isNaN(n) ? 0 : n;
 }
 
-// this is simply a shortcut for the eyes and fingers
-function $(id) {
-    return document.getElementById(id);
-}
 
-function convertInput(textarea) {
-    var splitInput = textarea.split(",");
-    var holdMe = document.getElementsByClassName("main-container")[0];
+function convertInput(inputTextValue, selectValue) {
+    var selectInput = document.getElementById('selectExisting');
+    var selectValue = selectInput.options[selectInput.selectedIndex].value;
+    var inputTextValue = document.getElementById('inputTextArea').value;
+
+    if (selectValue != 'selectone' && inputTextValue.length > 1) {
+        selectInput.value = 'selectone';
+        var splitInput = inputTextValue.trim().split(",");
+    }
+    else if (selectValue != 'selectone' && inputTextValue.length === 0) {
+        var splitInput = premadePhrases[selectValue].trim().split(",");
+    }
+    else if (inputTextValue.match (/\S/) && selectValue === 'selectone'){
+        var splitInput = inputTextValue.trim().split(",");
+    }
+    else if (inputTextValue.match (/\S/) || selectValue === 'selectone') {
+        alert("You didn't do anything.");
+    }
+    else {
+        console.log("you forgot something");
+    }
+
+
+    var holdMe = $(".main-container");
+    var heightMax = holdMe.height();
 
     console.log(splitInput);
 
     for (i = 0; i < splitInput.length; i++) {
         var word = splitInput[i];
-        holdMe.innerHTML += '<div class="magnet drag">'+word+'</div>';
+        var posy = 100 + Math.floor( Math.random() * (heightMax-100*2));
+        var posx = 40 + Math.random() * ((700-40*2)-120);
+        var rotateDegrees = (Math.random() * (5 - (-5) + 1)) + (-5);
+
+        var newMagnet = ($('<div class="magnet drag">'+word+'</div>'));
+        newMagnet.css({
+            'transform': 'translate3d('+posx+'px, '+posy+'px, 0px) rotate('+rotateDegrees+'deg)'
+        });
+        holdMe.append(newMagnet);
     }
+
 }
 
-convertInput(textarea);
+function clearInput() {
+    document.getElementById('inputTextArea').value = "";
+}
+
+function clearMagnets() {
+    var elements = document.getElementsByClassName("magnet drag");
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
