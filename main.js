@@ -4,7 +4,7 @@ var _offsetX = 0;           // current element offset
 var _offsetY = 0;
 var _dragElement;           // needs to be passed from OnMouseDown to OnMouseMove
 var _oldZIndex = 0;         // we temporarily increase the z-index during drag
-
+var iterator = 10;
 
 var premadePhrases = {
     sample:"the,quick,brown,fox,jumps,over,the,lazy,dog",
@@ -42,8 +42,8 @@ function onMouseDown(e) {
         _offsetY = extractNumber(target.style.top);
         
         // bring the clicked element to the front while it is being dragged
-        _oldZIndex = target.style.zIndex;
-        target.style.zIndex = 10000;
+        iterator++;
+        target.style.zIndex = iterator;
         
         // we need to access the element in OnMouseMove
         _dragElement = target;
@@ -51,8 +51,6 @@ function onMouseDown(e) {
         // tell our code to start moving the element with the mouse
         document.addEventListener('mousemove', onMouseMove);
 
-        // cancel out any text selections
-        document.body.focus();
 
         // prevent text selection in IE
         document.onselectstart = function () { return false; };
@@ -81,7 +79,7 @@ function onMouseUp(e) {
 
     if (_dragElement != null)
     {
-        _dragElement.style.zIndex = _oldZIndex;
+        // _dragElement.style.zIndex = ;
 
         // we're done with these events until the next OnMouseDown
         document.removeEventListener('mousemove', onMouseMove);
@@ -106,24 +104,23 @@ function extractNumber(value) {
 function convertInput(inputTextValue, selectValue) {
     var selectInput = document.getElementById('selectExisting');
     var selectValue = selectInput.options[selectInput.selectedIndex].value;
-    var inputTextValue = document.getElementById('inputTextArea').value;
+    var inputTextValue = $('#inputTextArea').val().trim();
 
-    if (selectValue != 'selectone' && inputTextValue.length > 1) {
+    console.log(inputTextValue, "text");
+
+    //if selection & value text box, reset select and process the text box
+    if (inputTextValue.length > 1) {
         selectInput.value = 'selectone';
-        var splitInput = inputTextValue.trim().split(",");
+        var splitInput = inputTextValue.split(",");
     }
-    else if (selectValue != 'selectone' && inputTextValue.length === 0) {
-        var splitInput = premadePhrases[selectValue].trim().split(",");
-    }
-    else if (inputTextValue.match (/\S/) && selectValue === 'selectone'){
-        var splitInput = inputTextValue.trim().split(",");
-    }
-    else if (inputTextValue.match (/\S/) || selectValue === 'selectone') {
-        alert("You didn't do anything.");
+    //if selection & no value text box, process selection
+    else if (selectValue != 'selectone') {
+        var splitInput = premadePhrases[selectValue].split(",");
     }
     else {
-        console.log("you forgot something");
+        alert("You didn't do anything.");
     }
+
 
 
     var holdMe = $(".main-container");
@@ -138,16 +135,23 @@ function convertInput(inputTextValue, selectValue) {
         var rotateDegrees = (Math.random() * (5 - (-5) + 1)) + (-5);
 
         var newMagnet = ($('<div class="magnet drag">'+word+'</div>'));
+        iterator++;
         newMagnet.css({
-            'transform': 'translate3d('+posx+'px, '+posy+'px, 0px) rotate('+rotateDegrees+'deg)'
+            'transform': 'translate3d('+posx+'px, '+posy+'px, 0px) rotate('+rotateDegrees+'deg)',
+            'z-index': iterator
         });
         holdMe.append(newMagnet);
+
     }
 
 }
 
-function clearInput() {
-    document.getElementById('inputTextArea').value = "";
+function clearInput(selectValue) {
+    var textInput = document.getElementById('inputTextArea');
+    var selectInput = document.getElementById('selectExisting');
+
+    textInput = textInput.value = "";
+    selectInput.value = 'selectone';
 }
 
 function clearMagnets() {
